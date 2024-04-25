@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home - Biscuit</title>
+    <link href="{% static 'chatbot/main.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <main class="laptop">
+        <div class="chat">
+            <div class="container">
+                <div class="chat-center">
+                    <div class='chat-container' id="myList">
+                    </div>
+                    <div class="chat-input flex">
+                        <input type="text" id="messageText" placeholder="Write your message here" />
+                        <button id="messageSend"><img src="{% static 'chatbot/send-svgrepo-com.svg' %}"
+                                width="25px" /></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+    let messageBox = document.getElementById('messageText')
+    let chatContainer = document.getElementById('myList')
+    let history = []
+    let workflow = 'Other'
+    function loadDoc() {
+        const val = messageBox.value
+        console.log(val, chatContainer);
+        if (val?.length) {
+            let body = {
+                "query": val,
+                history: history,
+                workflow: workflow
+            }
+            if (chatContainer.innerHTML?.length) {
+                chatContainer.innerHTML += `<div class="chat-primary">${val}</div>`
+            } else {
+                chatContainer.innerHTML = `<div class="chat-primary">${val}</div>`
+            }
+            messageBox.value = ''
+            body = JSON.stringify(body)
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    const res = JSON.parse(xhttp.responseText)?.response
+                    const classification = JSON.parse(xhttp.responseText)?.classified
+                    history.push({ human: val })
+                    history.push({ system: res })
+                    if (workflow === 'Other') {
+                        workflow = classification
+                    }
+                    chatContainer.innerHTML += `<div class="chat-info">${res} <br><br><em>Workflow Classfied as</em> <b>${classification}</b> </div>`
+                }
+            }
+            xhttp.open("POST", "http://127.0.0.1:9000/api/v1/dashboard/process-question");
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.setRequestHeader("x-api-key", "lHn7D3IVau4NlmRnY3Qbv5GTIweRx4HT8cNwNs37");
+            xhttp.send(body);
+        }
+    }
+    messageBox.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            loadDoc();
+        }
+    });
+    document.getElementById('messageSend').onclick = loadDoc
+</script>
+
+</html>

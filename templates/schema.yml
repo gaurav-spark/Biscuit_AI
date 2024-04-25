@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Biscuit CMS APIs
+  version: 1.0.0
+  description: Backend APIs for Biscuit CMS
+paths: {}
+components: {}

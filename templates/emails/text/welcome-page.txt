@@ -1,0 +1,4 @@
+Hello {{name|title}},
+
+Thank you for joining Pawtaker family. Please login with your email and password, Our platform will help you to find the best mate for your pet.
+We promise you to have best experience with our website for your pet. 

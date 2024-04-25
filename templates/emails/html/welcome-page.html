@@ -1,0 +1,20 @@
+
+{% extends 'emails/html/base-email.html' %}
+{% load static %}
+
+{% block heading %}Welcome to Pawtaker{% endblock %}
+
+{% block image %}
+{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'emails/images/pawtaker-logo.png' %}
+{% endblock%}
+
+{% block recepient_name %}
+Hello {{name|title}},
+{% endblock %}
+
+{% block email_body %}
+Thank you for joining Pawtaker family. Please login with your email and password, Our platform will help you to find the best mate for your pet.
+{% endblock %}
+
+{% block button %}
+{% endblock %}
